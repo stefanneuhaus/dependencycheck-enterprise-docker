@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.sglahn:gradle-dockerfile-plugin:0.4'
+    }
+}
+
+apply plugin: 'dockerfile'
+
+docker {
+    imageName = 'dependencycheck-enterprise'
+    imageVersion = '3.0.0-0.1'
+    buildContext = 'build-context'
+    pull = true
+}
+
+
+task clean(type: Delete) {
+    group 'DependencyCheck Enterprise Docker'
+    description 'Cleans the Docker build context.'
+    delete 'build-context'
+}
+
+task prepareBuildContext(type: Sync) {
+    group 'DependencyCheck Enterprise Docker'
+    description 'Prepares the Docker build context.'
+    outputs.upToDateWhen { false }
+    mustRunAfter clean
+    into 'build-context'
+    from('.') {
+        include 'gradle/wrapper/*'
+        include 'gradlew'
+    }
+    from('src') {
+        expand project.properties
+        include 'database.gradle'
+        include 'update.sh'
+        include 'wrapper.sh'
+    }
+    from("src/${project.databaseType}") {
+        expand project.properties
+        include 'Dockerfile'
+        include 'initialize.sql'
+        include 'initialize.sh'
+    }
+}
+dockerBuild.dependsOn(prepareBuildContext)
+
+task build {
+    group 'DependencyCheck Enterprise Docker'
+    description 'Builds the Docker image.'
+    dependsOn([prepareBuildContext, dockerBuild])
+}
+
+
+defaultTasks 'build'

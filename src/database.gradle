@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.owasp:dependency-check-gradle:3.0.0'
+        classpath 'mysql:mysql-connector-java:5.1.44'
+    }
+}
+
+apply plugin: 'org.owasp.dependencycheck'
+
+dependencyCheck {
+    cveValidForHours = 0
+    data {
+        connectionString = "jdbc:mysql://localhost:3306/${databaseName}?useSSL=false"
+        driver = "com.mysql.jdbc.Driver"
+        username = "root"
+        password = "dc"
+    }
+}
+
+
+task preUpdate {
+    description = 'Performs all tasks that need to run before dependencyCheckUpdate.'
+    group = 'DependencyCheck Database (Hooks)'
+}
+dependencyCheckUpdate.mustRunAfter preUpdate
+
+task postUpdateSuccess {
+    description = 'Performs all tasks that need to run after a successful update.'
+    group = 'DependencyCheck Database (Hooks)'
+    mustRunAfter dependencyCheckUpdate
+}
+
+
+task update {
+    description = 'Performs an update of the project.'
+    group = 'DependencyCheck Database'
+    dependsOn([preUpdate, dependencyCheckUpdate, postUpdateSuccess])
+}
+
+
+
+task lastUpdateAttempt {
+    doLast {
+        def timeStamp = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(new Date())
+        logger.quiet(timeStamp)
+        file("last-update-attempt.txt") << timeStamp << System.getProperty('line.separator')
+    }
+}
+preUpdate.dependsOn lastUpdateAttempt
