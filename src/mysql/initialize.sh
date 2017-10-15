@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mysql --user=root --password=dc ${databaseName} < ${installDirectory}/initialize.sql
+mysql --user=root --password=${databaseRootPassword} ${databaseName} < ${installDirectory}/initialize.sql

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2017 Stefan Neuhaus
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 buildscript {
     repositories {
         mavenCentral()
@@ -10,10 +25,11 @@ buildscript {
 apply plugin: 'dockerfile'
 
 docker {
-    imageName = 'dependencycheck-enterprise'
-    imageVersion = '3.0.0-0.1'
-    buildContext = 'build-context'
-    pull = true
+    imageName = project.properties.imageName
+    imageVersion = '3.0.0-1'
+    tags = ['3.0.0-1', 'latest']
+    dockerFile = 'build-context/Dockerfile'
+    dockerRepository = project.properties.dockerRegistry
 }
 
 
@@ -39,7 +55,7 @@ task prepareBuildContext(type: Sync) {
         include 'update.sh'
         include 'wrapper.sh'
     }
-    from("src/${project.databaseType}") {
+    from("src/mysql") {
         expand project.properties
         include 'Dockerfile'
         include 'initialize.sql'
@@ -51,8 +67,12 @@ dockerBuild.dependsOn(prepareBuildContext)
 task build {
     group 'DependencyCheck Enterprise Docker'
     description 'Builds the Docker image.'
-    dependsOn([prepareBuildContext, dockerBuild])
+    dependsOn(dockerBuild)
 }
 
-
-defaultTasks 'build'
+task push {
+    group 'DependencyCheck Enterprise Docker'
+    description 'Pushes the Docker image to the registry.'
+    dependsOn(dockerPush)
+}
+dockerPush.mustRunAfter(build)

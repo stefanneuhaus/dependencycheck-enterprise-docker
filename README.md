@@ -4,17 +4,33 @@ Docker based self-updating central [OWASP DependencyCheck](https://www.owasp.org
 This is basically an out-of-the-box solution for the central Enterprise Setup described [here](https://jeremylong.github.io/DependencyCheck/data/database.html).
 
 
-## Quick Start
+## Quick Start Setup
 
-Build the Docker image and start a container:
+### Central Database
+
+Build the Docker image and push it to your registry:
 ```
-./gradlew
-docker run -p 3307:3306 --name dependencycheck-enterprise dependencycheck-enterprise:3.0.0-0.1
+./gradlew -PdockerRegistry=<DOCKER_REGISTRY> build push
 ```
 
-Grab yourself a coffee while the Database is being created.
+Run the image in a new container:
+```
+docker run -p 3307:3306 <DOCKER_REGISTRY>/dependencycheck-enterprise:3.0.0-1
+```
 
-Configure your project to be analyzed. Example (Gradle):
+Note that the database update is not being kicked off upon run of the image but only being scheduled on a regular basis. Per default the database update is 
+scheduled on the hour. The initial update takes quite some time. Depending on your machine and internet connection this can take up to 30 min. Subsequent 
+updates are incremental ones and finish in a couple of seconds.
+
+
+### Project to be analyzed
+
+Apply the following changes to your build file:
+- add buildscript dependency for `mysql:mysql-connector-java:5.1.44`
+- disable database updates triggered by your project: `autoUpdate = false`
+- add database connection parameters: `data { ... }`
+
+Example (Gradle):
 ```groovy
 buildscript {
     repositories {
@@ -29,18 +45,27 @@ buildscript {
 apply plugin: 'org.owasp.dependencycheck'
 
 dependencyCheck {
-    failBuildOnCVSS = 0
     autoUpdate = false
     data {
-        connectionString = "jdbc:mysql://localhost:3307/dependencycheck?useSSL=false"
+        connectionString = "jdbc:mysql://<DC_HOST>:3307/dependencycheck?useSSL=false"
         driver = "com.mysql.jdbc.Driver"
-        username = "root"
-        password = "dc"
+        username = "dc"
+        password = "change-me"
     }
 }
 ```
 
-Now you are able to start the Dependency Analysis without the time-consuming creation/update of a project-specific Database:
+Start the Dependency Analysis:
 ```
 ./gradlew dependencyCheckAnalyze
 ```
+
+It's likely that the database is still empty as the automatic update has not been triggered yet. Thus you might want to kick off the initial update manually:
+```
+./gradlew dependencyCheckUpdate
+```
+ 
+
+## Customization
+
+See `gradle.properties` for a selection of properties. 

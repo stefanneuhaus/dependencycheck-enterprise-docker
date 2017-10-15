@@ -2,8 +2,8 @@ FROM mysql:5.7.19
 
 LABEL maintainer="Stefan Neuhaus <stefan@stefanneuhaus.org>"
 
-ENV MYSQL_DATABASE dependencycheck
-ENV MYSQL_ROOT_PASSWORD dc
+ENV MYSQL_DATABASE ${databaseName}
+ENV MYSQL_ROOT_PASSWORD ${databaseRootPassword}
 
 WORKDIR ${installDirectory}
 
@@ -19,8 +19,8 @@ RUN echo "deb http://http.debian.net/debian jessie-backports main" >/etc/apt/sou
   && echo "alias ll='ls -l'" >>/root/.bashrc
 
 
-COPY gradle/wrapper/* ${installDirectory}/gradle/wrapper/
-COPY gradlew ${installDirectory}
+COPY build-context/gradle/wrapper/* ${installDirectory}/gradle/wrapper/
+COPY build-context/gradlew ${installDirectory}
 
 RUN ${installDirectory}/gradlew --no-daemon wrapper
 
@@ -29,13 +29,13 @@ RUN echo "${cronUpdateSchedule}  ${installDirectory}/update.sh" > /etc/cron.d/de
   && crontab /etc/cron.d/dependencycheck-database-update
 
 
-COPY initialize.sql ${installDirectory}
-COPY initialize.sh /docker-entrypoint-initdb.d/
+COPY build-context/initialize.sql ${installDirectory}
+COPY build-context/initialize.sh /docker-entrypoint-initdb.d/
 
-COPY database.gradle ${installDirectory}
-COPY update.sh ${installDirectory}
+COPY build-context/database.gradle ${installDirectory}
+COPY build-context/update.sh ${installDirectory}
 
-COPY wrapper.sh /wrapper.sh
+COPY build-context/wrapper.sh /wrapper.sh
 
 
 EXPOSE 3306
