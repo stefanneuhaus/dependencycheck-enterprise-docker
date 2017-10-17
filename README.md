@@ -68,4 +68,4 @@ It's likely that the database is still empty as the automatic update has not bee
 
 ## Customization
 
-See `gradle.properties` for a selection of properties. 
+See [gradle.properties](https://github.com/stefanneuhaus/dependencycheck-enterprise-docker/blob/master/gradle.properties) for a selection of properties. 
