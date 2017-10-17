@@ -9,13 +9,19 @@ This is basically an out-of-the-box solution for the central Enterprise Setup de
 ### Central Database
 
 Build the Docker image and push it to your registry:
-```
+```bash
 ./gradlew -PdockerRegistry=<DOCKER_REGISTRY> build push
 ```
 
 Run the image in a new container:
-```
+```bash
 docker run -p 3307:3306 <DOCKER_REGISTRY>/dependencycheck-enterprise:3.0.0-1
+```
+
+If you are building on the host that shall serve the database the above steps reduce to:
+```bash
+./gradlew build
+docker run -p 3307:3306 dependencycheck-enterprise:3.0.0-1
 ```
 
 Note that the database update is not being kicked off upon run of the image but only being scheduled on a regular basis. Per default the database update is 
@@ -56,12 +62,12 @@ dependencyCheck {
 ```
 
 Start the Dependency Analysis:
-```
+```bash
 ./gradlew dependencyCheckAnalyze
 ```
 
 It's likely that the database is still empty as the automatic update has not been triggered yet. Thus you might want to kick off the initial update manually:
-```
+```bash
 ./gradlew dependencyCheckUpdate
 ```
  
