@@ -8,15 +8,15 @@ ENV MYSQL_ROOT_PASSWORD ${databaseRootPassword}
 WORKDIR ${installDirectory}
 
 
-RUN echo "deb http://http.debian.net/debian jessie-backports main" >/etc/apt/sources.list.d/jessie-backports.list \
-  && apt-get update \
-  && apt-get install -y -t jessie-backports \
-    openjdk-8-jre-headless \
-    cron \
-    vim \
-  && apt-get purge -y --auto-remove \
-  && rm -rf /var/lib/apt/lists/* \
-  && echo "alias ll='ls -l'" >>/root/.bashrc
+RUN echo "deb http://http.debian.net/debian jessie-backports main" >/etc/apt/sources.list.d/jessie-backports.list && \
+    apt-get update && \
+    apt-get install -y -t jessie-backports \
+        openjdk-8-jre-headless \
+        cron \
+        vim && \
+    apt-get purge -y --auto-remove && \
+    rm -rf /var/lib/apt && \
+    echo "alias ll='ls -l'" >>/root/.bashrc
 
 
 COPY build-context/gradle/wrapper/* ${installDirectory}/gradle/wrapper/
@@ -25,8 +25,8 @@ COPY build-context/gradlew ${installDirectory}
 RUN ${installDirectory}/gradlew --no-daemon wrapper
 
 
-RUN echo "${cronUpdateSchedule}  ${installDirectory}/update.sh" > /etc/cron.d/dependencycheck-database-update \
-  && crontab /etc/cron.d/dependencycheck-database-update
+RUN echo "${cronUpdateSchedule}  ${installDirectory}/update.sh" > /etc/cron.d/dependencycheck-database-update && \
+    crontab /etc/cron.d/dependencycheck-database-update
 
 
 COPY build-context/initialize.sql ${installDirectory}

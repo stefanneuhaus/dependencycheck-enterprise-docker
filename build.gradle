@@ -53,11 +53,11 @@ task prepareBuildContext(type: Sync) {
         expand project.properties
         include 'database.gradle'
         include 'update.sh'
-        include 'wrapper.sh'
     }
     from("src/mysql") {
         expand project.properties
         include 'Dockerfile'
+        include 'wrapper.sh'
         include 'initialize.sql'
         include 'initialize.sh'
     }
