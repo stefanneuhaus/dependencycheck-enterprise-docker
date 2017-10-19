@@ -3,6 +3,16 @@
 Docker based self-updating central [OWASP DependencyCheck](https://www.owasp.org/index.php/OWASP_Dependency_Check) Database Server.
 This is basically an out-of-the-box solution for the central Enterprise Setup described [here](https://jeremylong.github.io/DependencyCheck/data/database.html).
 
+## Benefits
+- Very fast analysis
+- Using up-to-date CVE data
+- No manual central database setup required
+- Analysis clients do not require internet access (see below)
+
+Though not actually required, clients _should_ still have HTTP/HTTPS access to [Maven Central Repository](https://search.maven.org/) in order to lessen the 
+probability of false negatives (cf. [OWASP DependencyCheck documentation](https://jeremylong.github.io/DependencyCheck/data/index.html#Downloading_Additional_Information)).
+If you definitely want to disable internet access on the client, disable the so called _"Central Analyzer"_.
+
 
 ## Quick Start Setup
 
