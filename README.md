@@ -1,7 +1,7 @@
 # DependencyCheck Enterprise Docker
 
-Docker based self-updating central [OWASP DependencyCheck](https://www.owasp.org/index.php/OWASP_Dependency_Check) Database Server.
-This is basically an out-of-the-box solution for the central Enterprise Setup described [here](https://jeremylong.github.io/DependencyCheck/data/database.html).
+Docker-based self-updating central [OWASP DependencyCheck](https://www.owasp.org/index.php/OWASP_Dependency_Check) Database Server.
+This is an out-of-the-box solution for the central Enterprise Setup described [here](https://jeremylong.github.io/DependencyCheck/data/database.html).
 
 ## Benefits
 - Very fast analysis
@@ -16,7 +16,7 @@ If you definitely want to disable internet access on the client, disable the so 
 
 ## Quick Start Setup
 
-### Central Database
+### Central Database Server
 
 Build the Docker image and push it to your registry:
 ```bash
@@ -39,9 +39,9 @@ scheduled on the hour. The initial update takes quite some time. Depending on yo
 updates are incremental ones and finish in a couple of seconds.
 
 
-### Project to be analyzed
+### Analysis clients
 
-Apply the following changes to your build file:
+All analysis clients are supported: Gradle, Maven, Ant, Jenkins, CLI. Apply the following changes to your build file:
 - add buildscript dependency for `mysql:mysql-connector-java:5.1.44`
 - disable database updates triggered by your project: `autoUpdate = false`
 - add database connection parameters: `data { ... }`
