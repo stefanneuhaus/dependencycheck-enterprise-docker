@@ -75,3 +75,9 @@ It's likely that the database is still empty as the automatic update has not bee
 ## Customization
 
 See [gradle.properties](https://github.com/stefanneuhaus/dependencycheck-enterprise-docker/blob/master/gradle.properties) for a selection of properties. 
+
+
+## Compatibility
+
+Plugin versions used in your project to be analyzed (_client_) usually stay compatible to the DependencyCheck Enterprise Docker Database (_server_) for a 
+long time. All client/server combinations with version >= 1.4.1 should work together.
