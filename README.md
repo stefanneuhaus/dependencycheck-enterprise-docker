@@ -15,13 +15,13 @@ Build the Docker image and push it to your registry:
 
 Run the image in a new container:
 ```bash
-docker run -p 3307:3306 <DOCKER_REGISTRY>/dependencycheck-enterprise:3.0.0-1
+docker run -p 3307:3306 <DOCKER_REGISTRY>/dependencycheck-enterprise:3.0.1-1
 ```
 
 If you are building on the host that shall serve the database the above steps reduce to:
 ```bash
 ./gradlew build
-docker run -p 3307:3306 dependencycheck-enterprise:3.0.0-1
+docker run -p 3307:3306 dependencycheck-enterprise:3.0.1-1
 ```
 
 Note that the database update is not being kicked off upon run of the image but only being scheduled on a regular basis. Per default the database update is 
@@ -43,7 +43,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.owasp:dependency-check-gradle:3.0.0'
+        classpath 'org.owasp:dependency-check-gradle:3.0.1'
         classpath 'mysql:mysql-connector-java:5.1.44'
     }
 }

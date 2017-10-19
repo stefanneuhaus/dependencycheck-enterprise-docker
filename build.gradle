@@ -26,8 +26,8 @@ apply plugin: 'dockerfile'
 
 docker {
     imageName = project.properties.imageName
-    imageVersion = '3.0.0-1'
-    tags = ['3.0.0-1', 'latest']
+    imageVersion = '3.0.1-1'
+    tags = ['3.0.1-1', 'latest']
     dockerFile = 'build-context/Dockerfile'
     dockerRepository = project.properties.dockerRegistry
 }
