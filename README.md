@@ -5,7 +5,7 @@ This is an out-of-the-box solution for the central Enterprise Setup described [h
 
 ## Benefits
 - Very fast analysis
-- Using up-to-date CVE data
+- Self-updating, thus always up-to-date CVE data
 - No manual central database setup required
 - Analysis clients do not require internet access (see below)
 
@@ -41,7 +41,7 @@ updates are incremental ones and finish in a couple of seconds.
 
 ### Analysis clients
 
-All analysis clients are supported: Gradle, Maven, Ant, Jenkins, CLI. Apply the following changes to your build file:
+All kinds of analysis clients are supported: Gradle, Maven, Ant, Jenkins, CLI. Apply the following changes to your build file:
 - add buildscript dependency for `mysql:mysql-connector-java:5.1.44`
 - disable database updates triggered by your project: `autoUpdate = false`
 - add database connection parameters: `data { ... }`
