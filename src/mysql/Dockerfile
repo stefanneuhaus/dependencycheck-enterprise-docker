@@ -1,4 +1,4 @@
-FROM mysql:5.7.19
+FROM mysql:5.7.20
 
 LABEL maintainer="Stefan Neuhaus <stefan@stefanneuhaus.org>"
 
