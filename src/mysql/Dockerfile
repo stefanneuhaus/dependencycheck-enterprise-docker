@@ -19,8 +19,8 @@ RUN echo "deb http://http.debian.net/debian jessie-backports main" >/etc/apt/sou
     echo "alias ll='ls -l'" >>/root/.bashrc
 
 
-COPY build-context/gradle/wrapper/* ${installDirectory}/gradle/wrapper/
-COPY build-context/gradlew ${installDirectory}
+COPY gradle/wrapper/* ${installDirectory}/gradle/wrapper/
+COPY gradlew ${installDirectory}
 
 RUN ${installDirectory}/gradlew --no-daemon wrapper
 
@@ -29,13 +29,13 @@ RUN echo "${cronUpdateSchedule}  ${installDirectory}/update.sh" > /etc/cron.d/de
     crontab /etc/cron.d/dependencycheck-database-update
 
 
-COPY build-context/initialize.sql ${installDirectory}
-COPY build-context/initialize.sh /docker-entrypoint-initdb.d/
+COPY initialize.sql ${installDirectory}
+COPY initialize.sh /docker-entrypoint-initdb.d/
 
-COPY build-context/database.gradle ${installDirectory}
-COPY build-context/update.sh ${installDirectory}
+COPY database.gradle ${installDirectory}
+COPY update.sh ${installDirectory}
 
-COPY build-context/wrapper.sh /wrapper.sh
+COPY wrapper.sh /wrapper.sh
 
 
 EXPOSE 3306

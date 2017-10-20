@@ -18,7 +18,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.sglahn:gradle-dockerfile-plugin:0.4'
+        classpath 'org.sglahn:gradle-dockerfile-plugin:0.5'
     }
 }
 
@@ -28,7 +28,7 @@ docker {
     imageName = project.properties.imageName
     imageVersion = '3.0.1-1'
     tags = ['3.0.1-1', 'latest']
-    dockerFile = 'build-context/Dockerfile'
+    buildContext = 'build-context'
     dockerRepository = project.properties.dockerRegistry
 }
 
